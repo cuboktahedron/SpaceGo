@@ -19,4 +19,11 @@ html
 
     script(src="/lib/js/jquery.min.js")
     script(src="/lib/js/bootstrap.min.js")
+    script(src="/lib/js/require.js")
+    script(src="/js/bundle.js")
+
+    script.
+      require(['main'], function(main) {
+        new main().start();
+      });
 

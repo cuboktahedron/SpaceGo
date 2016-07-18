@@ -2,14 +2,15 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var plumber = require('gulp-plumber');
 var sourcemaps = require('gulp-sourcemaps');
-var webpack = require('gulp-webpack');
 var spawn = require('child_process').spawn;
 var livereload = require('gulp-livereload');
+var rjs = require('gulp-requirejs');
 
 var libs = {
   js: [
     'node_modules/jquery/dist/*.min.js',
-    'node_modules/bootstrap/dist/js/*.min.js'
+    'node_modules/bootstrap/dist/js/*.min.js',
+    'node_modules/requirejs/require.js',
   ],
   css: [
     'node_modules/bootstrap/dist/css/*.min.css'
@@ -24,8 +25,14 @@ gulp.task('compile:lib', function() {
 });
 
 gulp.task('cjs',function(){
-  gulp.src(['src/scripts/app/client/*.js'])
-    .pipe(webpack(require('./webpack.config.js')))
+  rjs({
+    baseUrl: 'src/scripts/app/client',
+    name: 'main',
+    out: 'bundle.js'
+  })
+    .pipe(sourcemaps.init())
+    .pipe(plumber())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('public/js/'))
 })
 
