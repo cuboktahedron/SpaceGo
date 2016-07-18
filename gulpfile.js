@@ -6,6 +6,23 @@ var webpack = require('gulp-webpack');
 var spawn = require('child_process').spawn;
 var livereload = require('gulp-livereload');
 
+var libs = {
+  js: [
+    'node_modules/jquery/dist/*.min.js',
+    'node_modules/bootstrap/dist/js/*.min.js'
+  ],
+  css: [
+    'node_modules/bootstrap/dist/css/*.min.css'
+  ]
+};
+
+gulp.task('compile:lib', function() {
+  gulp.src(libs.js)
+    .pipe(gulp.dest('public/lib/js'));
+  gulp.src(libs.css)
+    .pipe(gulp.dest('public/lib/css'));
+});
+
 gulp.task('cjs',function(){
   gulp.src(['src/scripts/app/client/*.js'])
     .pipe(webpack(require('./webpack.config.js')))
