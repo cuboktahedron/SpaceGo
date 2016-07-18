@@ -2,5 +2,13 @@ extends layout
 
 block content
   script(src='js/bundle.js')
-  h1= title
-  p Welcome to #{title}
+
+  div(class="jumbotron text-center")
+    h1 宇宙囲碁／SpaceGo
+  div.container.battle
+    div.row
+      div.col-md-9
+        div.wrapper-field
+          canvas
+
+

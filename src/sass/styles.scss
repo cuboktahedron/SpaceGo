@@ -1,7 +1,29 @@
-div {
-  margin: 10px;
-  p {
-    color: red;
-  }
+body {
+  background-color: black;
 }
 
+.battle {
+  .wrapper-field {
+    position: relative;
+    width: 100%;
+
+    canvas {
+      background-color: blue;
+      bottom: 0;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      max-height: 768px;
+      max-width: 768px;
+      right: 0;
+      top: 0;
+      width: 100%;
+    }
+  }
+
+  .wrapper-field:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+}
