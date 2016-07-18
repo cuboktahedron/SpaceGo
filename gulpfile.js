@@ -26,7 +26,7 @@ gulp.task('compile:lib', function() {
 gulp.task('cjs',function(){
   gulp.src(['src/scripts/app/client/*.js'])
     .pipe(webpack(require('./webpack.config.js')))
-    .pipe(gulp.dest('public/javascripts/'))
+    .pipe(gulp.dest('public/js/'))
 })
 
 gulp.task('sass',function(){
@@ -35,7 +35,7 @@ gulp.task('sass',function(){
     .pipe(plumber())
     .pipe(sass({style : 'expanded'}))
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('public/stylesheets'));
+    .pipe(gulp.dest('public/css'));
 });
 
 var server = null;
