@@ -23,6 +23,12 @@ html
     script(src="/js/bundle.js")
 
     script.
+      require.config({
+        paths: {
+          lib: '/lib/js'
+        }
+      });
+
       require(['main'], function(main) {
         new main().start();
       });

@@ -11,6 +11,7 @@ var libs = {
     'node_modules/jquery/dist/*.min.js',
     'node_modules/bootstrap/dist/js/*.min.js',
     'node_modules/requirejs/require.js',
+    'node_modules/eventemitter2/lib/eventemitter2.js',
   ],
   css: [
     'node_modules/bootstrap/dist/css/*.min.css'
