@@ -28,6 +28,10 @@ gulp.task('compile:lib', function() {
 gulp.task('cjs',function(){
   rjs({
     baseUrl: 'src/scripts/app/client',
+    paths: {
+      lib: '../../../../public/lib/js'
+    },
+    exclude: ['lib/eventemitter2'],
     name: 'main',
     out: 'bundle.js'
   })
