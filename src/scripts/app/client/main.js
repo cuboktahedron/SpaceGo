@@ -1,10 +1,16 @@
-define(function() {
+define(function(require) {
   "use strict";
 
   var main = function() {};
   main.prototype = {
     start: function() {
-      var Field = require('field');
+      var fieldView = new(require('FieldView'));
+      var field = new(require('Field'));
+
+      fieldView.init();
+      field.init(9);
+
+      field.startUp();
     }
   };
 
