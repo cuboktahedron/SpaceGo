@@ -4,7 +4,7 @@ var plumber = require('gulp-plumber');
 var sourcemaps = require('gulp-sourcemaps');
 var spawn = require('child_process').spawn;
 var livereload = require('gulp-livereload');
-var rjs = require('gulp-requirejs');
+var requirejsOptimize = require('gulp-requirejs-optimize');
 
 var libs = {
   js: [
@@ -26,17 +26,17 @@ gulp.task('compile:lib', function() {
 });
 
 gulp.task('cjs',function(){
-  rjs({
-    baseUrl: 'src/scripts/app/client',
-    paths: {
-      lib: '../../../../public/lib/js'
-    },
-    exclude: ['lib/eventemitter2'],
-    name: 'main',
-    out: 'bundle.js'
-  })
-    .pipe(sourcemaps.init())
+  gulp.src('src/scripts/app/client/main.js')
     .pipe(plumber())
+    .pipe(requirejsOptimize({
+      baseUrl: 'src/scripts/app/client',
+      paths: {
+        lib: '../../../../public/lib/js'
+      },
+      exclude: ['lib/eventemitter2'],
+      name: 'main',
+    }))
+    .pipe(sourcemaps.init())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('public/js/'))
 })
