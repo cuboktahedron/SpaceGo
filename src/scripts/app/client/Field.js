@@ -24,6 +24,13 @@ define(function(require) {
         }
       }
 
+      // TEST: init field randomly
+      for (x = 0; x < size; x++) {
+        for (y = 0; y < size; y++) {
+          this._field[x][y] = Math.floor(Math.random() * 3) + 1;
+        }
+      }
+
       FD.on('putStone', this._putStone);
     },
 
@@ -31,9 +38,7 @@ define(function(require) {
       BD.emit('refreshAll', {
         field: {
           size: this._size,
-          stones: [
-            StoneType.Black
-          ],
+          stones: this._field,
         }
       });
     },
@@ -43,6 +48,7 @@ define(function(require) {
       BD.emit('refreshAll', {
         field: {
           size: this._size,
+          stones: this._field,
         }
       });
     },
