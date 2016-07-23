@@ -35,6 +35,7 @@ gulp.task('cjs',function(){
       },
       exclude: ['lib/eventemitter2'],
       name: 'main',
+      optimize: 'none',
       out: "bundle.js"
     }))
     .pipe(sourcemaps.init())
