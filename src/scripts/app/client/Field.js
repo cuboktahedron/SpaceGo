@@ -27,7 +27,8 @@ define(function(require) {
       }
 
       FD.on('putStone', function(pl) {
-        that._putStone(pl);
+        var pos = that._toLocalPosition(pl);
+        that._putStone(pos);
       });
     },
 
@@ -39,6 +40,28 @@ define(function(require) {
           stones: this._field,
         }
       });
+    },
+
+    _toLocalPosition: function(pl) {
+      var x, y;
+      var block = pl.unit * this._size;
+
+      // to main board coord
+      x = (pl.x - pl.margin + block) % block;
+      y = (pl.y - pl.margin + block) % block;
+
+      // to local coord
+      x = Math.round(x / pl.unit),
+      y = Math.round(y / pl.unit),
+
+      // slide center
+      x = (this._center.x - (Math.floor(this._size / 2)) + x + this._size) % this._size;
+      y = (this._center.y - (Math.floor(this._size / 2)) + y + this._size) % this._size;
+
+      return {
+        x: x,
+        y: y,
+      };
     },
 
     /**

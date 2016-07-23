@@ -24,19 +24,14 @@ define(function(require) {
       });
 
       this._$canvas.click(function(e) {
-        var x, y;
         var unit = 45;
         var margin = 204;
 
-        x = Math.round((e.offsetX - margin) / 45);
-        y = Math.round((e.offsetY - margin) / 45);
-
-        console.log(x, y);
-
-        // TODO: センタがずれている場合に見た通りの位置に石を置けるようにする
         FD.emit('putStone', {
-          x: x,
-          y: y,
+          x: e.offsetX,
+          y: e.offsetY,
+          margin: margin,
+          unit: unit,
         });
       });
     },
