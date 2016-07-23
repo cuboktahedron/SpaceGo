@@ -22,14 +22,7 @@ define(function(require) {
       for (x = 0; x < size; x++) {
         this._field[x] = [];
         for (y = 0; y < size; y++) {
-          this._field[x][y] = null;
-        }
-      }
-
-      // TEST: init field randomly
-      for (x = 0; x < size; x++) {
-        for (y = 0; y < size; y++) {
-          this._field[x][y] = Math.floor(Math.random() * 3) + 1;
+          this._field[x][y] = StoneType.None;
         }
       }
 
