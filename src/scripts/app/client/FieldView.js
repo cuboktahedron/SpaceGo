@@ -12,6 +12,7 @@ define(function(require) {
   var FieldView = function() {};
   FieldView.prototype = {
     init: function() {
+      this._$canvas = $('#field');
       this._canvas = $('#field')[0];
       this._ctx = this._canvas.getContext('2d');
       this._height = this._canvas.width;
@@ -20,6 +21,22 @@ define(function(require) {
       var that = this;
       BD.on('refreshAll', function(payload) {
         that._refreshAll(payload);
+      });
+
+      this._$canvas.click(function(e) {
+        var x, y;
+        var unit = 45;
+        var margin = 204;
+
+        x = Math.round((e.offsetX - margin) / 45);
+        y = Math.round((e.offsetY - margin) / 45);
+
+        console.log(x, y);
+
+        FD.emit('putStone', {
+          x: x,
+          y: y,
+        });
       });
     },
 
