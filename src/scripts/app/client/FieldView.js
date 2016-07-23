@@ -33,6 +33,7 @@ define(function(require) {
 
         console.log(x, y);
 
+        // TODO: センタがずれている場合に見た通りの位置に石を置けるようにする
         FD.emit('putStone', {
           x: x,
           y: y,
@@ -76,6 +77,7 @@ define(function(require) {
       var c = this._ctx;
       var i;
       var x, y;
+      var xx, yy;
       var unit = 45;
       var margin = 204;
       var stars = [
@@ -90,9 +92,11 @@ define(function(require) {
       for (i = 0; i < stars.length; i++) {
         x = stars[i].x;
         y = stars[i].y;
+        xx = (pl.field.size + Math.floor(pl.field.size / 2) + x - pl.field.center.x) % pl.field.size;
+        yy = (pl.field.size + Math.floor(pl.field.size / 2) + y - pl.field.center.y) % pl.field.size;
 
         c.beginPath();
-        c.arc(x * unit + margin, y * unit + margin, 6, 0, Math.PI * 2, true);
+        c.arc(xx * unit + margin, yy * unit + margin, 6, 0, Math.PI * 2, true);
         c.fill();
         c.closePath();
       }
@@ -101,6 +105,7 @@ define(function(require) {
     _writeStones: function(pl) {
       var c = this._ctx;
       var x, y;
+      var xx, yy;
       var unit = 45;
       var margin = 204;
 
@@ -108,12 +113,15 @@ define(function(require) {
 
       for (x = 0; x < pl.field.size; x++) {
         for (y = 0; y < pl.field.size; y++) {
+          xx = (pl.field.size + Math.floor(pl.field.size / 2) + x - pl.field.center.x) % pl.field.size;
+          yy = (pl.field.size + Math.floor(pl.field.size / 2) + y - pl.field.center.y) % pl.field.size;
+
           console.log(StoneType.Black);
           if (pl.field.stones[x][y] === StoneType.Black) {
             c.beginPath();
             c.strokeStyle = 'rgb(255, 255, 255)';
             c.fillStyle = 'rgb(0, 0, 0)';
-            c.arc(x * unit + margin, y * unit + margin, 20, 0, Math.PI * 2, true);
+            c.arc(xx * unit + margin, yy * unit + margin, 20, 0, Math.PI * 2, true);
             c.stroke();
             c.fill();
             c.closePath();
@@ -121,7 +129,7 @@ define(function(require) {
             c.beginPath();
             c.strokeStyle = 'rgb(0, 0, 0)';
             c.fillStyle = 'rgb(255, 255, 255)';
-            c.arc(x * unit + margin, y * unit + margin, 20, 0, Math.PI * 2, true);
+            c.arc(xx * unit + margin, yy * unit + margin, 20, 0, Math.PI * 2, true);
             c.stroke();
             c.fill();
             c.closePath();

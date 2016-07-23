@@ -17,6 +17,7 @@ define(function(require) {
       this._size = size;
       this._phase = StoneType.Black;
       this._field = [];
+      this._center = { x: Math.floor(size / 2), y: Math.floor(size / 2) };
 
       for (x = 0; x < size; x++) {
         this._field[x] = [];
@@ -40,6 +41,7 @@ define(function(require) {
     startUp: function() {
       BD.emit('refreshAll', {
         field: {
+          center: this._center,
           size: this._size,
           stones: this._field,
         }
@@ -59,8 +61,13 @@ define(function(require) {
         this._switchTurn();
         this._capture();
 
+        // TEST: move center
+//        this._center.x = (this._center.x + 1) % this._size;
+//        this._center.y = (this._center.y + 1) % this._size;
+
         BD.emit('refreshAll', {
           field: {
+            center: this._center,
             size: this._size,
             stones: this._field,
           }
