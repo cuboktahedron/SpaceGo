@@ -27,8 +27,8 @@ define(function(require) {
       });
 
       this._$canvas.click(function(e) {
-        var unit = 45;
-        var margin = 204;
+        var unit = 44;
+        var margin = 198;
 
         FD.emit('putStone', {
           x: e.offsetX,
@@ -46,9 +46,9 @@ define(function(require) {
       this._writeStars(pl);
       this._writeStones(pl);
 
-      var unit = 45;
+      var unit = 44;
       var halfUnit = unit / 2;
-      var margin = 204;
+      var margin = 198;
       var unit4 = unit * 4;
       var unit5 = unit * 5;
       var unit8 = unit * 8;
@@ -99,9 +99,9 @@ define(function(require) {
     _writeBoard: function(pl) {
       var c = this._backCtx;
       var x, y;
-      var unit = 45;
+      var unit = 44;
       var halfUnit = unit / 2;
-      var margin = 204;
+      var margin = 198;
 
       c.beginPath();
       c.strokeStyle = 'rgb(255, 255, 255)';
@@ -125,8 +125,8 @@ define(function(require) {
       var i;
       var x, y;
       var xx, yy;
-      var unit = 45;
-      var margin = 204;
+      var unit = 44;
+      var margin = 198;
       var stars = [
         { x: 2, y:2 },
         { x: 4, y:4 },
@@ -154,8 +154,8 @@ define(function(require) {
       var c = this._backCtx;
       var x, y;
       var xx, yy;
-      var unit = 45;
-      var margin = 204;
+      var unit = 44;
+      var margin = 198;
 
       c.lineWidth = 3;
 
