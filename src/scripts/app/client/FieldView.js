@@ -99,7 +99,7 @@ define(function(require) {
     },
 
     _clearBoard: function(ctx) {
-      ctx.fillStyle = 'rgb(0, 0, 0)';
+      ctx.fillStyle = 'rgb(64, 64, 64)';
       ctx.fillRect(0, 0, this._width, this._height);
     },
 
