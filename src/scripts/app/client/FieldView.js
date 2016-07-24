@@ -18,6 +18,7 @@ define(function(require) {
       this._backCanvas = $('#back-field')[0];
       this._ctx = this._canvas.getContext('2d');
       this._backCtx = this._backCanvas.getContext('2d');
+      this._baseCanvasSize = { x: 748, y: 748 };
       this._height = this._canvas.width;
       this._width = this._canvas.height;
 
@@ -30,13 +31,19 @@ define(function(require) {
         var unit = 44;
         var margin = 198;
 
+        console.log(e.offsetX * that._canvasRatio);
         FD.emit('putStone', {
-          x: e.offsetX,
-          y: e.offsetY,
+          x: Math.floor(e.offsetX / that._canvasRatio),
+          y: Math.floor(e.offsetY / that._canvasRatio),
           margin: margin,
           unit: unit,
         });
       });
+
+      $(window).resize(function(e) {
+        var rect = that._canvas.getBoundingClientRect();
+        that._canvasRatio = rect.width / that._baseCanvasSize.x;
+      }).trigger('resize');
     },
 
     _refreshAll: function(pl) {
