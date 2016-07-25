@@ -30,6 +30,43 @@ define(function(require) {
         var pos = that._toLocalPosition(pl);
         that._putStone(pos);
       });
+
+      FD.on('touch', function(pl) {
+        var pos = that._toLocalPosition(pl);
+        if (that._field[pos.x][pos.y] !== StoneType.None) {
+          BD.emit('grab', {
+            x: pl.x,
+            y: pl.y,
+            center: $.extend({}, that._center),
+          });
+        }
+      });
+
+      FD.on('pan', function(pl) {
+        var dx, dy;
+        if (pl.dx < 0) {
+          var dx = Math.ceil(pl.dx / (pl.unit * 2));
+        } else if (pl.dx > 0) {
+          var dx = Math.floor(pl.dx / (pl.unit * 2));
+        }
+
+        if (pl.dy < 0) {
+          var dy = Math.ceil(pl.dy / (pl.unit * 2));
+        } else if (pl.dy > 0) {
+          var dy = Math.floor(pl.dy / (pl.unit * 2));
+        }
+
+        that._center.x = (that._size + pl.grabInfo.center.x - dx) % that._size;
+        that._center.y = (that._size + pl.grabInfo.center.y - dy) % that._size;
+
+        BD.emit('refreshAll', {
+          field: {
+            center: that._center,
+            size: that._size,
+            stones: that._field,
+          }
+        });
+      });
     },
 
     startUp: function() {

@@ -27,12 +27,53 @@ define(function(require) {
         that._refreshAll(payload);
       });
 
-      this._$canvas.click(function(e) {
+      var grabInfo;
+      BD.on('grab', function(pl) {
+        that._$canvas.addClass('grabbing');
+        grabInfo = pl;
+        console.log(pl);
+      });
+
+      $(document).mouseup(function(e) {
+        var unit = 44;
+        var margin = 198;
+
+        if (that._$canvas.hasClass('grabbing')) {
+          that._$canvas.removeClass('grabbing');
+          return;
+        }
+
+        console.log(e.offsetX * that._canvasRatio);
+        FD.emit('putStone', {
+          x: Math.floor(e.offsetX / that._canvasRatio),
+          y: Math.floor(e.offsetY / that._canvasRatio),
+          margin: margin,
+          unit: unit,
+        });
+      });
+
+      this._$canvas.mousemove(function(e) {
+        var unit = 44;
+        var margin = 198;
+
+        if (!that._$canvas.hasClass('grabbing')) {
+          return;
+        }
+
+        FD.emit('pan', {
+          unit: unit,
+          grabInfo: grabInfo,
+          dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
+          dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
+        });
+      });
+
+      this._$canvas.mousedown(function(e) {
         var unit = 44;
         var margin = 198;
 
         console.log(e.offsetX * that._canvasRatio);
-        FD.emit('putStone', {
+        FD.emit('touch', {
           x: Math.floor(e.offsetX / that._canvasRatio),
           y: Math.floor(e.offsetY / that._canvasRatio),
           margin: margin,

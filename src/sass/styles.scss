@@ -9,6 +9,7 @@ body {
 
     #field {
       bottom: 0;
+      cursor: hand;
       height: 100%;
       position: absolute;
       left: 0;
@@ -17,6 +18,12 @@ body {
       right: 0;
       top: 0;
       width: 100%;
+    }
+
+    // TODO: ここは画像を用意する
+    #field.grabbing {
+      cursor:-moz-grabbing;
+      cursor:-webkit-grabbing;
     }
 
     #back-field {
