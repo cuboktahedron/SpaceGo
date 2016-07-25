@@ -60,7 +60,7 @@ gulp.task('server',function(){
   server = spawn('node',['./bin/www']);
 })
 
-gulp.task('watch-client', function () {
+gulp.task('watch-client', ['sass', 'cjs'], function () {
   gulp.watch('src/sass/**/*.scss', ['sass']);
   gulp.watch('src/scripts/app/client/**/*.js', ['cjs']);
 });
