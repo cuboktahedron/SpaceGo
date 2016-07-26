@@ -45,17 +45,17 @@ define(function(require) {
       FD.on('pan', function(pl) {
         var dx, dy;
         if (pl.dx < 0) {
-          dx = Math.ceil(pl.dx / (pl.unit * 2));
+          dx = Math.ceil(pl.dx / pl.unit);
         } else if (pl.dx > 0) {
-          dx = Math.floor(pl.dx / (pl.unit * 2));
+          dx = Math.floor(pl.dx / pl.unit);
         } else {
           dx = 0;
         }
 
         if (pl.dy < 0) {
-          dy = Math.ceil(pl.dy / (pl.unit * 2));
+          dy = Math.ceil(pl.dy / pl.unit);
         } else if (pl.dy > 0) {
-          dy = Math.floor(pl.dy / (pl.unit * 2));
+          dy = Math.floor(pl.dy / pl.unit);
         } else {
           dy = 0;
         }
