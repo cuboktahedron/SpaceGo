@@ -3,6 +3,7 @@ define(function(require) {
 
   // Constants
   var Constants = require('Constants');
+  var MouseButton = Constants.View.MouseButton;
   var StoneType = Constants.StoneType;
 
   // Dispatchers
@@ -38,6 +39,10 @@ define(function(require) {
         var unit = 44;
         var margin = 198;
 
+        if (e.which !== MouseButton.Left) {
+          return;
+        }
+
         if (that._$canvas.hasClass('grabbing')) {
           that._$canvas.removeClass('grabbing');
           return;
@@ -71,6 +76,10 @@ define(function(require) {
       this._$canvas.mousedown(function(e) {
         var unit = 44;
         var margin = 198;
+
+        if (e.which !== MouseButton.Left) {
+          return;
+        }
 
         console.log(e.offsetX * that._canvasRatio);
         FD.emit('touch', {
