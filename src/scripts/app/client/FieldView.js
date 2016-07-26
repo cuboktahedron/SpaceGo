@@ -66,7 +66,7 @@ define(function(require) {
           return;
         }
 
-        if (Date.now() - previousMouseMove > 200) {
+        if (Date.now() - previousMouseMove > 50) {
           FD.emit('pan', {
             unit: unit,
             grabInfo: grabInfo,
