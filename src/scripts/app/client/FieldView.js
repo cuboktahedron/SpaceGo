@@ -57,6 +57,7 @@ define(function(require) {
         });
       });
 
+      var previousMouseMove = Date.now();
       this._$canvas.mousemove(function(e) {
         var unit = 44;
         var margin = 198;
@@ -65,12 +66,16 @@ define(function(require) {
           return;
         }
 
-        FD.emit('pan', {
-          unit: unit,
-          grabInfo: grabInfo,
-          dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
-          dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
-        });
+        if (Date.now() - previousMouseMove > 200) {
+          FD.emit('pan', {
+            unit: unit,
+            grabInfo: grabInfo,
+            dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
+            dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
+          });
+
+          previousMouseMove = Date.now();
+        }
       });
 
       this._$canvas.mousedown(function(e) {
