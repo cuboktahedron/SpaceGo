@@ -65,6 +65,19 @@ define(function(require) {
 
         that._emitRefreshAll();
       });
+
+      FD.on('hover', function(pl) {
+        var pos = that._toLocalPosition(pl);
+        if (that._field[pos.x][pos.y] !== StoneType.None) {
+          BD.emit('hoverOnStone');
+        } else {
+          BD.emit('hoverOnNone', {
+            x: pos.x,
+            y: pos.y,
+            center: $.extend({}, that._center),
+          });
+        }
+      });
     },
 
     startUp: function() {

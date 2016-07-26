@@ -34,6 +34,17 @@ define(function(require) {
         grabInfo = pl;
       });
 
+      BD.on('hoverOnStone', function() {
+        that._$canvas.removeClass('grabbing');
+        that._$canvas.addClass('grabbable');
+      });
+
+      BD.on('hoverOnNone', function(pl) {
+//        that._hoverOnNone(pl);
+        that._$canvas.removeClass('grabbable');
+        that._$canvas.removeClass('grabbing');
+      });
+
       $(document).mouseup(function(e) {
         var unit = 44;
         var margin = 198;
@@ -60,17 +71,22 @@ define(function(require) {
         var unit = 44;
         var margin = 198;
 
-        if (!that._$canvas.hasClass('grabbing')) {
-          return;
-        }
-
         if (Date.now() - previousMouseMove > 50) {
-          FD.emit('pan', {
-            unit: unit,
-            grabInfo: grabInfo,
-            dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
-            dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
-          });
+          if (that._$canvas.hasClass('grabbing')) {
+            FD.emit('pan', {
+              unit: unit,
+              grabInfo: grabInfo,
+              dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
+              dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
+            });
+          } else {
+            FD.emit('hover', {
+              x: Math.floor(e.offsetX / that._canvasRatio),
+              y: Math.floor(e.offsetY / that._canvasRatio),
+              margin: margin,
+              unit: unit,
+            });
+          }
 
           previousMouseMove = Date.now();
         }

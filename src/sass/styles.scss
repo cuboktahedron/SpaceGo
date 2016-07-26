@@ -26,6 +26,11 @@ body {
       cursor:-webkit-grabbing;
     }
 
+    #field.grabbable {
+      cursor:-moz-grab;
+      cursor:-webkit-grab;
+    }
+
     #back-field {
       display: none;
     };
