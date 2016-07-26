@@ -63,24 +63,12 @@ define(function(require) {
         that._center.x = (that._size + pl.grabInfo.center.x - dx) % that._size;
         that._center.y = (that._size + pl.grabInfo.center.y - dy) % that._size;
 
-        BD.emit('refreshAll', {
-          field: {
-            center: that._center,
-            size: that._size,
-            stones: that._field,
-          }
-        });
+        that._emitRefreshAll();
       });
     },
 
     startUp: function() {
-      BD.emit('refreshAll', {
-        field: {
-          center: this._center,
-          size: this._size,
-          stones: this._field,
-        }
-      });
+      this._emitRefreshAll();
     },
 
     _toLocalPosition: function(pl) {
@@ -122,13 +110,7 @@ define(function(require) {
 //        this._center.x = (this._center.x + 1) % this._size;
 //        this._center.y = (this._center.y + 1) % this._size;
 
-        BD.emit('refreshAll', {
-          field: {
-            center: this._center,
-            size: this._size,
-            stones: this._field,
-          }
-        });
+        this._emitRefreshAll();
       }
     },
 
@@ -168,6 +150,16 @@ define(function(require) {
       } else {
         this._phase = StoneType.Black;
       }
+    },
+
+    _emitRefreshAll: function() {
+        BD.emit('refreshAll', {
+          field: {
+            center: this._center,
+            size: this._size,
+            stones: this._field,
+          }
+        });
     },
   };
 
