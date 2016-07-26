@@ -45,15 +45,19 @@ define(function(require) {
       FD.on('pan', function(pl) {
         var dx, dy;
         if (pl.dx < 0) {
-          var dx = Math.ceil(pl.dx / (pl.unit * 2));
+          dx = Math.ceil(pl.dx / (pl.unit * 2));
         } else if (pl.dx > 0) {
-          var dx = Math.floor(pl.dx / (pl.unit * 2));
+          dx = Math.floor(pl.dx / (pl.unit * 2));
+        } else {
+          dx = 0;
         }
 
         if (pl.dy < 0) {
-          var dy = Math.ceil(pl.dy / (pl.unit * 2));
+          dy = Math.ceil(pl.dy / (pl.unit * 2));
         } else if (pl.dy > 0) {
-          var dy = Math.floor(pl.dy / (pl.unit * 2));
+          dy = Math.floor(pl.dy / (pl.unit * 2));
+        } else {
+          dy = 0;
         }
 
         that._center.x = (that._size + pl.grabInfo.center.x - dx) % that._size;
