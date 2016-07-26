@@ -32,7 +32,6 @@ define(function(require) {
       BD.on('grab', function(pl) {
         that._$canvas.addClass('grabbing');
         grabInfo = pl;
-        console.log(pl);
       });
 
       $(document).mouseup(function(e) {
@@ -48,7 +47,6 @@ define(function(require) {
           return;
         }
 
-        console.log(e.offsetX * that._canvasRatio);
         FD.emit('putStone', {
           x: Math.floor(e.offsetX / that._canvasRatio),
           y: Math.floor(e.offsetY / that._canvasRatio),
@@ -86,7 +84,6 @@ define(function(require) {
           return;
         }
 
-        console.log(e.offsetX * that._canvasRatio);
         FD.emit('touch', {
           x: Math.floor(e.offsetX / that._canvasRatio),
           y: Math.floor(e.offsetY / that._canvasRatio),
@@ -226,7 +223,6 @@ define(function(require) {
           xx = (pl.field.size + Math.floor(pl.field.size / 2) + x - pl.field.center.x) % pl.field.size;
           yy = (pl.field.size + Math.floor(pl.field.size / 2) + y - pl.field.center.y) % pl.field.size;
 
-          console.log(StoneType.Black);
           if (pl.field.stones[x][y] === StoneType.Black) {
             c.beginPath();
             c.strokeStyle = 'rgb(255, 255, 255)';
