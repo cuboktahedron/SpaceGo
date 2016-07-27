@@ -2,12 +2,12 @@ define(function(require) {
   "use strict";
 
   // Constants
-  var Constants = require('Constants');
+  var Constants = require('app/client/Constants');
   var StoneType = Constants.StoneType;
 
   // Dispatchers
-  var FD = require('FrontDispatcher');
-  var BD = require('BackDispatcher');
+  var FD = require('app/client/FrontDispatcher');
+  var BD = require('app/client/BackDispatcher');
 
   var Field = function() {};
   Field.prototype = {

@@ -4,8 +4,8 @@ define(function(require) {
   var main = function() {};
   main.prototype = {
     start: function() {
-      var fieldView = new(require('FieldView'));
-      var field = new(require('Field'));
+      var fieldView = new(require('app/client/FieldView'));
+      var field = new(require('app/client/Field'));
 
       fieldView.init();
       field.init(9);

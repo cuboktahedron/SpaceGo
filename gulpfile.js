@@ -29,12 +29,12 @@ gulp.task('cjs',function(){
   gulp.src('src/scripts/app/client/main.js')
     .pipe(plumber())
     .pipe(requirejsOptimize({
-      baseUrl: 'src/scripts/app/client',
+      baseUrl: 'src/scripts',
       paths: {
-        lib: '../../../../public/lib/js'
+        lib: '../../public/lib/js'
       },
       exclude: ['lib/eventemitter2'],
-      name: 'main',
+      name: 'app/client/main',
       optimize: 'none',
       out: "bundle.js"
     }))
