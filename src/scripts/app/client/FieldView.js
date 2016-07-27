@@ -30,6 +30,7 @@ define(function(require) {
 
       var grabInfo;
       BD.on('grab', function(pl) {
+        that._$canvas.removeClass('grabbable');
         that._$canvas.addClass('grabbing');
         grabInfo = pl;
       });
