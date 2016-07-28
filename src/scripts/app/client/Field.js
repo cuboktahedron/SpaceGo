@@ -12,17 +12,29 @@ define(function(require) {
   var Field = function() {};
   Field.prototype = {};
 
-  Field.prototype.init = function(size) {
+  Object.defineProperties(Field.prototype, {
+    size: {
+      set: function(value) { this._size = value; },
+      get: function()      { return this._size;  },
+    },
+
+    center: {
+      set: function(value) { this._center = value; },
+      get: function()      { return this._center; },
+    }
+  });
+
+  Field.prototype.init = function(setting) {
     var that = this;
     var x, y;
-    this._size = size;
+    this.size = setting.size;
     this._phase = StoneType.Black;
     this._field = [];
-    this._center = { x: Math.floor(size / 2), y: Math.floor(size / 2) };
+    this.center = { x: Math.floor(this.size / 2), y: Math.floor(this.size / 2) };
 
-    for (x = 0; x < size; x++) {
+    for (x = 0; x < this.size; x++) {
       this._field[x] = [];
-      for (y = 0; y < size; y++) {
+      for (y = 0; y < this.size; y++) {
         this._field[x][y] = StoneType.None;
       }
     }
@@ -38,7 +50,7 @@ define(function(require) {
         BD.emit('grab', {
           x: pl.x,
           y: pl.y,
-          center: $.extend({}, that._center),
+          center: $.extend({}, that.center),
         });
       }
     });
@@ -61,8 +73,8 @@ define(function(require) {
         dy = 0;
       }
 
-      that._center.x = (that._size + pl.grabInfo.center.x - dx) % that._size;
-      that._center.y = (that._size + pl.grabInfo.center.y - dy) % that._size;
+      that.center.x = (that.size + pl.grabInfo.center.x - dx) % that.size;
+      that.center.y = (that.size + pl.grabInfo.center.y - dy) % that.size;
 
       that._emitRefreshAll();
     });
@@ -75,7 +87,7 @@ define(function(require) {
         BD.emit('hoverOnNone', {
           x: pos.x,
           y: pos.y,
-          center: $.extend({}, that._center),
+          center: $.extend({}, that.center),
         });
       }
     });
@@ -88,7 +100,7 @@ define(function(require) {
 
   Field.prototype._toLocalPosition = function(pl) {
     var x, y;
-    var block = pl.unit * this._size;
+    var block = pl.unit * this.size;
 
     // to main board coord
     x = (pl.x - pl.margin + block) % block;
@@ -99,8 +111,8 @@ define(function(require) {
     y = Math.round(y / pl.unit),
 
     // slide center
-    x = (this._center.x - (Math.floor(this._size / 2)) + x + this._size) % this._size;
-    y = (this._center.y - (Math.floor(this._size / 2)) + y + this._size) % this._size;
+    x = (this.center.x - (Math.floor(this.size / 2)) + x + this.size) % this.size;
+    y = (this.center.y - (Math.floor(this.size / 2)) + y + this.size) % this.size;
 
     return {
       x: x,
@@ -122,8 +134,8 @@ define(function(require) {
       this._capture();
 
       // TEST: move center
-//        this._center.x = (this._center.x + 1) % this._size;
-//        this._center.y = (this._center.y + 1) % this._size;
+//        this.center.x = (this.center.x + 1) % this.size;
+//        this.center.y = (this.center.y + 1) % this.size;
 
       this._emitRefreshAll();
     }
@@ -146,7 +158,7 @@ define(function(require) {
   };
 
   Field.prototype._isOuterField = function(pos) {
-    return pos.x < 0 || pos.x >= this._size || pos.y < 0 || pos.y >= this._size;
+    return pos.x < 0 || pos.x >= this.size || pos.y < 0 || pos.y >= this.size;
   };
 
   Field.prototype._isSurrounded = function(pos) {
@@ -170,8 +182,8 @@ define(function(require) {
   Field.prototype._emitRefreshAll = function() {
     BD.emit('refreshAll', {
       field: {
-        center: this._center,
-        size: this._size,
+        center: this.center,
+        size: this.size,
         stones: this._field,
       }
     });
