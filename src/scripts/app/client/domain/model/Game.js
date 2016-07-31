@@ -46,8 +46,6 @@ define(function(require) {
     } else {
       this._phase = Stone.Black;
     }
-
-    console.log(this._phase);
   };
 
   Game.prototype.getState = function() {
