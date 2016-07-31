@@ -1,16 +1,21 @@
 define(function(require) {
   "use strict";
 
+  var GameMediator = require('app/client/mediator/GameMediator.js');
+  var BoardView = require('app/client/view/BoardView');
+
   var main = function() {};
   main.prototype = {
     start: function() {
-      var fieldView = new(require('app/client/FieldView'));
-      var field = new(require('app/client/Field'));
+      var mediator = new GameMediator();
 
-      fieldView.init();
-      field.init(9);
+      var boardView = new BoardView(mediator);
 
-      field.startUp();
+      mediator.startGame({
+        board: {
+          size: 9,
+        },
+      });
     }
   };
 

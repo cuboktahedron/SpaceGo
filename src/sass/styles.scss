@@ -3,11 +3,11 @@ body {
 }
 
 .battle {
-  .wrapper-field {
+  .wrapper-board {
     position: relative;
     width: 100%;
 
-    #field {
+    #board {
       bottom: 0;
       cursor: hand;
       height: 100%;
@@ -21,22 +21,22 @@ body {
     }
 
     // TODO: ここは画像を用意する
-    #field.grabbing {
+    #board.grabbing {
       cursor:-moz-grabbing;
       cursor:-webkit-grabbing;
     }
 
-    #field.grabbable {
+    #board.grabbable {
       cursor:-moz-grab;
       cursor:-webkit-grab;
     }
 
-    #back-field {
+    #back-board {
       display: none;
     };
   }
 
-  .wrapper-field:before {
+  .wrapper-board:before {
     content: "";
     display: block;
     padding-top: 100%;

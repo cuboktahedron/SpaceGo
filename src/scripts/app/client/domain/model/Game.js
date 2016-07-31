@@ -10,7 +10,7 @@ define(function(require) {
    */
   var Game = function(id, condition) {
     this._id = id;
-    this._board = new Board(condition.boardSize);
+    this._board = new Board(condition.board.size);
     this._phase = Stone.Black;
   };
 
@@ -44,6 +44,15 @@ define(function(require) {
       this._phase = Stone.White;
     } else {
       this._phase = Stone.Black;
+    }
+
+    console.log(this._phase);
+  };
+
+  Game.prototype.getState = function() {
+    return {
+      phase: this.phase,
+      board: this._board.getState(),
     }
   };
 

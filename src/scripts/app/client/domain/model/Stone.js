@@ -15,7 +15,7 @@ define(function(require) {
   Stone.prototype = {};
 
   Object.defineProperties(Stone.prototype, {
-    id: {
+    color: {
       get: function() { return this._color;  },
       configurable: false,
     },

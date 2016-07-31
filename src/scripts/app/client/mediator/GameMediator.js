@@ -14,14 +14,24 @@ define(function(require) {
   GameMediator.prototype = Object.create(EventEmitter.prototype);
 
   GameMediator.prototype.startGame= function(condition) {
-    this._GameService.newGame(condition);
+    var gameState = this._gameService.newGame(condition);
+
+    this.emit('refreshAll', gameState);
   };
 
-  GameMediator.prototype.clickCanvasLeft = function() {
+  GameMediator.prototype.putStone = function(x, y) {
+    var gameState = this._gameService.putNextStone(x, y);
+    if (gameState != null) {
+      this.emit('refreshAll', gameState);
+    }
+  };
+
+  GameMediator.prototype.mouseUpLeftOnBoard = function(data) {
+
   };
 
   GameMediator.prototype.pass = function() {
-    this._gameService.pass();
+    var gameState = this._gameService.pass();
   };
 
   return GameMediator;

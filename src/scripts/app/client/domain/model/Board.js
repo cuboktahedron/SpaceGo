@@ -48,32 +48,36 @@ define(function(require) {
   };
 
   Board.prototype.canPutStone = function(x, y, stone) {
-    if (this._isOuterField(x, y)) {
+    if (this.isOuterField(x, y)) {
       return false;
     }
 
-    if (this._existsStone(x, y)) {
+    if (this.existsStone(x, y)) {
       return false;
     }
 
-    if (this._isBanPoint(x, y, stone)) {
+    if (this.isBanPoint(x, y, stone)) {
       return false;
     }
 
     return true;
   };
 
-  Board.prototype._isOuterField = function(x, y) {
+  Board.prototype.isOuterField = function(x, y) {
     return x < 0 || x >= this.size || y < 0 || y >= this.size;
   };
 
-  Board.prototype._existsStone = function(x, y) {
+  Board.prototype.existsStone = function(x, y) {
     return this._coodinates[x][y] != null;
   };
 
-  Board.prototype._isBanPoint = function(x, y) {
+  Board.prototype.isBanPoint = function(x, y) {
     // TODO: not implemented
     return false;
+  };
+
+  Board.prototype.getState = function() {
+    return this;
   };
 
   return Board;

@@ -10,6 +10,12 @@ define(function(require) {
     },
   });
 
+  var id = 0;
+  GameRepository.nextGameId = function() {
+    id++;
+    return "" + id;
+  };
+
   return GameRepository;
 });
 
