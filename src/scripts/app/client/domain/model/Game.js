@@ -10,7 +10,8 @@ define(function(require) {
    */
   var Game = function(id, condition) {
     this._id = id;
-    this._board = new Board(condition.board.size);
+    this._condition = condition;
+    this._board = new Board(condition.boardSize);
     this._phase = Stone.Black;
   };
 

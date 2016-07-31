@@ -8,17 +8,17 @@ define(function(require) {
     });
 
     it("doesn't equals Black", function() {
-      assert.isTrue(Stone.White.equals(Stone.Black));
+      assert.isFalse(Stone.White.equals(Stone.Black));
     });
   });
 
   describe('Black Stone', function() {
     it("equals Black", function() {
-      assert.isTrue(Stone.Black.equals(Stone.White));
+      assert.isTrue(Stone.Black.equals(Stone.Black));
     });
 
     it("doesn't equals White", function() {
-      assert.isTrue(Stone.Black.equals(Stone.White));
+      assert.isFalse(Stone.Black.equals(Stone.White));
     });
   });
 });

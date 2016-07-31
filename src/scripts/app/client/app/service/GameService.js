@@ -3,6 +3,7 @@ define(function(require) {
 
   var Game = require('app/client/domain/model/Game');
   var GameId = require('app/client/domain/model/GameId');
+  var GameCondition = require('app/client/domain/model/GameCondition'); 
 
   var GameService = function() {
     // TODO: ここはファクトリメソッドを用意して、差し替えられるようにする
@@ -13,7 +14,10 @@ define(function(require) {
 
   GameService.prototype.newGame = function(condition) {
     var newGameId = this._gameRepository.nextGameId();
-    var game = new Game(newGameId, condition);
+    var gameCondition = new GameCondition({
+      boardSize: condition.board.size,
+    });
+    var game = new Game(newGameId, gameCondition);
     this._gameRepository.currentGame = game;
 
     return game.getState();
