@@ -9,7 +9,7 @@ define(function(require) {
     start: function() {
       var mediator = new GameMediator();
 
-      var boardView = new BoardView(mediator);
+      var boardView = new BoardView(mediator, 9);
 
       mediator.startGame({
         board: {

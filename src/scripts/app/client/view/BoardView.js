@@ -12,9 +12,20 @@ define(function(require) {
   // Mediator
   var GameMediator = require('app/client/mediator/GameMediator.js');
 
-  var BoardView = function(mediator) {
+  var BoardView = function(mediator, size) {
     this._mediator = mediator;
     this._cachedGameState = null;
+
+    this._size = size;
+    this._defaultCenter = {
+      x: Math.floor(size / 2),
+      y: Math.floor(size / 2),
+    };
+
+    this._center = {
+      x: this._defaultCenter.x,
+      y: this._defaultCenter.y,
+    };
 
     this._init();
   };
@@ -36,46 +47,63 @@ define(function(require) {
       that._refreshAll(gameState);
     });
 
-    //      BD.on('hoverOnStone', function() {
-    //        that._$canvas.removeClass('grabbing');
-    //        that._$canvas.addClass('grabbable');
-    //      });
-    //
-    //      BD.on('hoverOnNone', function(pl) {
-    ////        that._hoverOnNone(pl);
-    //        that._$canvas.removeClass('grabbable');
-    //        that._$canvas.removeClass('grabbing');
-    //      });
-
-    //      var previousMouseMove = Date.now();
-    //      this._$canvas.mousemove(function(e) {
-    //        var unit = 44;
-    //        var margin = 198;
-    //
-    //        if (Date.now() - previousMouseMove > 50) {
-    //          if (that._$canvas.hasClass('grabbing')) {
-    //            FD.emit('pan', {
-    //              unit: unit,
-    //              grabInfo: grabInfo,
-    //              dx: Math.floor(e.offsetX / that._canvasRatio) - grabInfo.x,
-    //              dy: Math.floor(e.offsetY / that._canvasRatio) - grabInfo.y,
-    //            });
-    //          } else {
-    //            FD.emit('hover', {
-    //              x: Math.floor(e.offsetX / that._canvasRatio),
-    //              y: Math.floor(e.offsetY / that._canvasRatio),
-    //              margin: margin,
-    //              unit: unit,
-    //            });
-    //          }
-    //
-    //          previousMouseMove = Date.now();
-    //        }
-    //      });
-
     (function() {
       var unit = 44;
       var mouseDownOriginalOffset = null;
+      var grabCenter = null;
+
+      var previousMouseMove = Date.now();
+      that._$canvas.mousemove(function(e) {
+        if (Date.now() - previousMouseMove > 50) {
+          if (that._$canvas.hasClass('grabbing')) {
+            moveCenter.call(that, e.offsetX, e.offsetY);
+          } else {
+            hoverOnBoard.call(that, e.offsetX, e.offsetY);
+          }
+
+          previousMouseMove = Date.now();
+        }
+      });
+
+      var moveCenter = function(offsetX, offsetY) {
+        var unit = 44;
+        var dx = Math.floor(offsetX / this._canvasRatio) - mouseDownOriginalOffset.x;
+        var dy = Math.floor(offsetY / this._canvasRatio) - mouseDownOriginalOffset.y;
+        if (dx < 0) {
+          dx = Math.ceil(dx / unit);
+        } else if (dx > 0) {
+          dx = Math.floor(dx / unit);
+        } else {
+          dx = 0;
+        }
+
+        if (dy < 0) {
+          dy = Math.ceil(dy / unit);
+        } else if (dy > 0) {
+          dy = Math.floor(dy / unit);
+        } else {
+          dy = 0;
+        }
+
+        console.log('before:', this._center);
+        this._center.x = (this._size + grabCenter.x - dx) % this._size;
+        this._center.y = (this._size + grabCenter.y - dy) % this._size;
+        console.log('after:', this._center);
+
+        this._refreshAll(this._cachedGameState);
+      };
+
+      var hoverOnBoard = function(offsetX, offsetY) {
+        var localPos = that._calculateLocalPosition(offsetX, offsetY);
+        var cgs = that._cachedGameState;
+        if (cgs.board.existsStone(localPos.x, localPos.y)) {
+          that._$canvas.removeClass('grabbing');
+          that._$canvas.addClass('grabbable');
+        } else {
+          that._$canvas.removeClass('grabbable');
+          that._$canvas.removeClass('grabbing');
+        }
+      };
 
       that._$canvas.mousedown(function(e) {
         if (e.which !== MouseButton.Left) {
@@ -83,14 +111,14 @@ define(function(require) {
         }
 
         mouseDownOriginalOffset = {
-          x: e.offsetX,
-          y: e.offsetY,
+          x: Math.floor(e.offsetX / that._canvasRatio),
+          y: Math.floor(e.offsetY / that._canvasRatio),
         }
 
         var localPos = that._calculateLocalPosition(e.offsetX, e.offsetY);
         var cgs = that._cachedGameState;
         if (cgs.board.existsStone(localPos.x, localPos.y)) {
-          that._grabBoard();
+          grabBoard.call(that);
         }
       });
 
@@ -102,12 +130,13 @@ define(function(require) {
         e.stopPropagation();
 
         if (grabCancel.call(that)) {
+          mouseDownOriginalOffset = null;
           return;
         }
 
         var offset = {
-          x: e.offsetX,
-          y: e.offsetY,
+          x: Math.floor(e.offsetX / that._canvasRatio),
+          y: Math.floor(e.offsetY / that._canvasRatio),
         };
         if (!isStrictSamePos.call(that, offset, mouseDownOriginalOffset)) {
           return;
@@ -117,6 +146,8 @@ define(function(require) {
         var cgs = that._cachedGameState;
 
         that._mediator.putStone(localPos.x, localPos.y);
+
+        mouseDownOriginalOffset = null;
       });
 
       $(document).mouseup(function(e) {
@@ -139,31 +170,30 @@ define(function(require) {
 
       var isStrictSamePos = function(pos1, pos2) {
         var unit = 44;
-
-        var x1 = Math.floor(pos1.x / this._canvasRatio);
-        var y1 = Math.floor(pos1.y / this._canvasRatio);
-        var x2 = Math.floor(pos2.x / this._canvasRatio);
-        var y2 = Math.floor(pos2.y / this._canvasRatio);
-
-        x1 = Math.round(x1 / unit);
-        y1 = Math.round(y1 / unit);
-        x2 = Math.round(x2 / unit);
-        y2 = Math.round(y2 / unit);
+        var x1 = Math.round(pos1.x / unit);
+        var y1 = Math.round(pos1.y / unit);
+        var x2 = Math.round(pos2.x / unit);
+        var y2 = Math.round(pos2.y / unit);
 
         console.log(x1, y1, x2, y2);
         return x1 === x2 && y1 === y2;
       };
+
+      var grabBoard = function() {
+        this._$canvas.removeClass('grabbable');
+        this._$canvas.addClass('grabbing');
+        grabCenter = {
+          x: this._center.x,
+          y: this._center.y,
+        };
+      };
+
     })();
 
     $(window).resize(function(e) {
       var rect = that._canvas.getBoundingClientRect();
       that._canvasRatio = rect.width / that._baseCanvasSize.x;
     }).trigger('resize');
-  };
-
-  BoardView.prototype._grabBoard = function() {
-    this._$canvas.removeClass('grabbable');
-    this._$canvas.addClass('grabbing');
   };
 
   BoardView.prototype._calculateLocalPosition = function(cx, cy) {
@@ -187,8 +217,8 @@ define(function(require) {
     y = Math.round((y - halfUnit) / unit);
 
     // slide center
-    //      x = (this.center.x - (Math.floor(this.size / 2)) + x + this.size) % this.size;
-    //      y = (this.center.y - (Math.floor(this.size / 2)) + y + this.size) % this.size;
+    x = (this._center.x - this._defaultCenter.x + x + this._size) % this._size;
+    y = (this._center.y - this._defaultCenter.y + y + this._size) % this._size;
 
     return {
       x: x,
@@ -298,10 +328,8 @@ define(function(require) {
     for (i = 0; i < stars.length; i++) {
       x = stars[i].x;
       y = stars[i].y;
-      xx = x;
-      yy = y;
-      //        xx = (gs.board.size + Math.floor(gs.board.size / 2) + x - gs.board.center.x) % gs.board.size;
-      //        yy = (gs.board.size + Math.floor(gs.board.size / 2) + y - gs.board.center.y) % gs.board.size;
+      xx = (this._size + this._defaultCenter.x + x - this._center.x) % this._size;
+      yy = (this._size + this._defaultCenter.y + y - this._center.y) % this._size;
 
       c.beginPath();
       c.arc(xx * unit + halfUnit + margin, yy * unit + halfUnit + margin, 6, 0, Math.PI * 2, true);
@@ -322,10 +350,8 @@ define(function(require) {
 
     for (x = 0; x < gs.board.size; x++) {
       for (y = 0; y < gs.board.size; y++) {
-        xx = x;
-        yy = y;
-        //          xx = (gs.board.size + Math.floor(gs.board.size / 2) + x - gs.board.center.x) % gs.board.size;
-        //          yy = (gs.board.size + Math.floor(gs.board.size / 2) + y - gs.board.center.y) % gs.board.size;
+        xx = (this._size + this._defaultCenter.x + x - this._center.x) % this._size;
+        yy = (this._size + this._defaultCenter.y + y - this._center.y) % this._size;
 
         if (gs.board.getStone(x, y) === Stone.Black) {
           c.beginPath();
