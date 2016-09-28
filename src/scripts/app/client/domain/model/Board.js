@@ -41,7 +41,7 @@ define(function(require) {
   };
 
   Board.prototype.putStone = function(x, y, stone) {
-    var ss;
+    var coords;
 
     if (!this.canPutStone(x, y, stone)) {
       return -1;
@@ -49,8 +49,8 @@ define(function(require) {
 
     this._coodinates[x][y] = stone;
 
-    ss = this._capture(x, y, stone);
-    return ss.length;
+    coords = this._capture(x, y, stone);
+    return coords.length;
   };
 
   Board.prototype.canPutStone = function(x, y, stone) {
@@ -89,7 +89,7 @@ define(function(require) {
 
   Board.prototype.dryPutStone = function(x, y, stone) {
     // TODO: make copy method
-    var ss;
+    var coords;
     var dryBoard = new Board(this.size);
     var xi, yi;
     for (xi = 0; xi < dryBoard.size; xi++) {
@@ -100,25 +100,25 @@ define(function(require) {
 
     dryBoard._coodinates[x][y] = stone;
 
-    ss = dryBoard._capture(x, y, stone);
-    if (ss.length === 0) {
+    coords = dryBoard._capture(x, y, stone);
+    if (coords.length === 0) {
       if(dryBoard._isSurroundedByEnemy(x, y, stone)) {
         return -1;
       }
     }
 
-    return ss.length;
+    return coords.length;
   };
 
   Board.prototype._capture = function(x, y, myStone) {
     var stone;
     var searched = [];
     var xi, yi;
-    var ss = [],
-      ss1 = [],
-      ss2 = [],
-      ss3 = [],
-      ss4 = [];
+    var coords = [],
+      coords1 = [],
+      coords2 = [],
+      coords3 = [],
+      coords4 = [];
     var coord;
     var i;
 
@@ -135,28 +135,28 @@ define(function(require) {
       }
     }
 
-    if (!this.searchSpace(this._correctCoordinate(x - 1), y, stone, searched, ss1)) {
-      ss = ss1.concat();
+    if (!this.searchSpace(this._correctCoordinate(x - 1), y, stone, searched, coords1)) {
+      coords = coords1.concat();
     }
-    if (!this.searchSpace(x, this._correctCoordinate(y - 1), stone, searched, ss2)) {
-      ss = ss.concat(ss2);
+    if (!this.searchSpace(x, this._correctCoordinate(y - 1), stone, searched, coords2)) {
+      coords = coords.concat(coords2);
     }
-    if (!this.searchSpace(this._correctCoordinate(x + 1), y, stone, searched, ss3)) {
-      ss = ss.concat(ss3);
+    if (!this.searchSpace(this._correctCoordinate(x + 1), y, stone, searched, coords3)) {
+      coords = coords.concat(coords3);
     }
-    if (!this.searchSpace(x, this._correctCoordinate(y + 1), stone, searched, ss4)) {
-      ss = ss.concat(ss4);
+    if (!this.searchSpace(x, this._correctCoordinate(y + 1), stone, searched, coords4)) {
+      coords = coords.concat(coords4);
     }
 
-    for (i = 0; i < ss.length; i++) {
-      coord = ss[i];
+    for (i = 0; i < coords.length; i++) {
+      coord = coords[i];
       this._coodinates[coord.x][coord.y] = null;
     }
 
-    return ss;
+    return coords;
   };
 
-  Board.prototype.searchSpace = function(xx, yy, myStone, searched, ss) {
+  Board.prototype.searchSpace = function(xx, yy, myStone, searched, coords) {
     if (searched[xx][yy]) {
       return false;
     }
@@ -168,11 +168,11 @@ define(function(require) {
     searched[xx][yy] = true;
 
     if (this._coodinates[xx][yy].equals(myStone)) {
-      ss.push({x: xx, y: yy});
-      if (this.searchSpace(this._correctCoordinate(xx - 1), yy, myStone, searched, ss)) return true;
-      if (this.searchSpace(xx, this._correctCoordinate(yy - 1), myStone, searched, ss)) return true;
-      if (this.searchSpace(this._correctCoordinate(xx + 1), yy, myStone, searched, ss)) return true;
-      if (this.searchSpace(xx, this._correctCoordinate(yy + 1), myStone, searched, ss)) return true;
+      coords.push({x: xx, y: yy});
+      if (this.searchSpace(this._correctCoordinate(xx - 1), yy, myStone, searched, coords)) return true;
+      if (this.searchSpace(xx, this._correctCoordinate(yy - 1), myStone, searched, coords)) return true;
+      if (this.searchSpace(this._correctCoordinate(xx + 1), yy, myStone, searched, coords)) return true;
+      if (this.searchSpace(xx, this._correctCoordinate(yy + 1), myStone, searched, coords)) return true;
     }
 
     return false;
@@ -181,7 +181,7 @@ define(function(require) {
   Board.prototype._isSurroundedByEnemy = function(x, y, myStone) {
     var searched = [];
     var xi, yi;
-    var ss = [];
+    var coords = [];
 
     for (xi = 0; xi < this.size; xi++) {
       searched[xi] = [];
@@ -190,7 +190,7 @@ define(function(require) {
       }
     }
 
-    return !this.searchSpace(x, y, myStone, searched, ss);
+    return !this.searchSpace(x, y, myStone, searched, coords);
   };
 
   Board.prototype._correctCoordinate = function(n) {
