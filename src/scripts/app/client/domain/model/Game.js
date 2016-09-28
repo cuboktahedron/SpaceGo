@@ -28,7 +28,7 @@ define(function(require) {
   });
 
   Game.prototype.putNextStone = function(x, y) {
-    if (!this._board.putStone(x, y, this.phase)) {
+    if (this._board.putStone(x, y, this.phase) === -1) {
       return false;
     }
 

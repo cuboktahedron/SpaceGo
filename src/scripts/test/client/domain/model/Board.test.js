@@ -13,8 +13,8 @@ define(function(require) {
     it("allows putting stone", function() {
       var board = new Board(5);
 
-      assert.isTrue(board.putStone(1, 1, Stone.Black));
-      assert.isTrue(board.putStone(1, 2, Stone.White));
+      assert.equal(board.putStone(1, 1, Stone.Black), 0);
+      assert.equal(board.putStone(1, 2, Stone.White), 0);
       assert.isTrue(board.getStone(1, 1).equals(Stone.Black));
       assert.isTrue(board.getStone(1, 2).equals(Stone.White));
     });
@@ -52,6 +52,21 @@ define(function(require) {
       assert.isFalse(board.canPutStone(0, 2, B));
       assert.isFalse(board.canPutStone(2, 3, B));
     });
+
+    it("captures enemy stones", function() {
+      var N = null;
+      var B = Stone.Black;
+      var W = Stone.White;
+
+      var board = BoardUtil.setupBoard([
+        [ N, W, N, W ],
+        [ W, N, B, N ],
+        [ W, B, W, B ],
+        [ W, B, W, B ],
+      ]);
+
+      assert.equal(board.putStone(2, 0, B), 2);
+    });
   });
 
   BoardUtil = {};
@@ -65,7 +80,7 @@ define(function(require) {
           continue;
         }
 
-        if (!board.putStone(x, y, boardData[y][x])) {
+        if (board.putStone(x, y, boardData[y][x]) === -1) {
           throw new Error("Invalid boardData passed.");
         }
       }
