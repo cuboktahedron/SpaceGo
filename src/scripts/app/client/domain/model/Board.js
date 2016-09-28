@@ -18,11 +18,11 @@ define(function(require) {
     }
 
     this._size = size;
-    this._coodinates = [];
+    this._coordinates = [];
     for (x = 0; x < size; x++) {
-      this._coodinates[x] = [];
+      this._coordinates[x] = [];
       for (y = 0; y < size; y++) {
-        this._coodinates[x][y] = null;
+        this._coordinates[x][y] = null;
       }
     }
   };
@@ -37,7 +37,7 @@ define(function(require) {
   });
 
   Board.prototype.getStone = function(x, y) {
-    return this._coodinates[x][y];
+    return this._coordinates[x][y];
   };
 
   Board.prototype.putStone = function(x, y, stone) {
@@ -47,7 +47,7 @@ define(function(require) {
       return -1;
     }
 
-    this._coodinates[x][y] = stone;
+    this._coordinates[x][y] = stone;
 
     coords = this._capture(x, y, stone);
     return coords.length;
@@ -70,7 +70,7 @@ define(function(require) {
   };
 
   Board.prototype.existsStone = function(x, y) {
-    return this._coodinates[x][y] != null;
+    return this._coordinates[x][y] != null;
   };
 
   Board.prototype.isBanPoint = function(x, y, stone) {
@@ -94,11 +94,11 @@ define(function(require) {
     var xi, yi;
     for (xi = 0; xi < dryBoard.size; xi++) {
       for (yi = 0; yi < dryBoard.size; yi++) {
-        dryBoard._coodinates[xi][yi] = this._coodinates[xi][yi];
+        dryBoard._coordinates[xi][yi] = this._coordinates[xi][yi];
       }
     }
 
-    dryBoard._coodinates[x][y] = stone;
+    dryBoard._coordinates[x][y] = stone;
 
     coords = dryBoard._capture(x, y, stone);
     if (coords.length === 0) {
@@ -150,7 +150,7 @@ define(function(require) {
 
     for (i = 0; i < coords.length; i++) {
       coord = coords[i];
-      this._coodinates[coord.x][coord.y] = null;
+      this._coordinates[coord.x][coord.y] = null;
     }
 
     return coords;
@@ -161,13 +161,13 @@ define(function(require) {
       return false;
     }
 
-    if (this._coodinates[xx][yy] == null) {
+    if (this._coordinates[xx][yy] == null) {
       return true;
     }
 
     searched[xx][yy] = true;
 
-    if (this._coodinates[xx][yy].equals(myStone)) {
+    if (this._coordinates[xx][yy].equals(myStone)) {
       coords.push({x: xx, y: yy});
       if (this.searchSpace(this._correctCoordinate(xx - 1), yy, myStone, searched, coords)) return true;
       if (this.searchSpace(xx, this._correctCoordinate(yy - 1), myStone, searched, coords)) return true;
