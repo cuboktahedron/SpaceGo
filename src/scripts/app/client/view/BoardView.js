@@ -170,12 +170,12 @@ define(function(require) {
 
       var isStrictSamePos = function(pos1, pos2) {
         var unit = 44;
-        var x1 = Math.round(pos1.x / unit);
-        var y1 = Math.round(pos1.y / unit);
-        var x2 = Math.round(pos2.x / unit);
-        var y2 = Math.round(pos2.y / unit);
+        var halfUnit = unit / 2;
+        var x1 = Math.round((pos1.x - halfUnit) / unit);
+        var y1 = Math.round((pos1.y - halfUnit) / unit);
+        var x2 = Math.round((pos2.x - halfUnit) / unit);
+        var y2 = Math.round((pos2.y - halfUnit) / unit);
 
-        console.log(x1, y1, x2, y2);
         return x1 === x2 && y1 === y2;
       };
 
