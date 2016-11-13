@@ -53,6 +53,23 @@ define(function(require) {
       assert.isFalse(board.canPutStone(2, 3, B));
     });
 
+    it("rejects recapturing ko immediately", function() {
+      var N = null;
+      var B = Stone.Black;
+      var W = Stone.White;
+
+      var board = BoardUtil.setupBoard([
+        [ N, N, N, N ],
+        [ N, W, B, N ],
+        [ W, N, N, B ],
+        [ N, W, B, N ],
+      ]);
+
+      board.putStone(1, 2, B);
+      assert.equal(board.putStone(2, 2, W), 1);
+      assert.equal(board.putStone(1, 2, B), -1);
+    });
+
     it("captures enemy stones", function() {
       var N = null;
       var B = Stone.Black;

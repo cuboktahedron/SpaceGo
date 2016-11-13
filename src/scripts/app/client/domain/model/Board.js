@@ -19,6 +19,8 @@ define(function(require) {
 
     this._size = size;
     this._coordinates = [];
+    this._lastCoordinates = null;
+    this._secondLastCoordinates = null;
     for (x = 0; x < size; x++) {
       this._coordinates[x] = [];
       for (y = 0; y < size; y++) {
@@ -47,10 +49,51 @@ define(function(require) {
       return -1;
     }
 
+    this._rotateLastCoordinates();
     this._coordinates[x][y] = stone;
 
     coords = this._capture(x, y, stone);
     return coords.length;
+  };
+
+  Board.prototype._rotateLastCoordinates = function() {
+    var x, y;
+
+    // the first step
+    if (this._lastCoordinates == null) {
+      this._lastCoordinates = [];
+
+      for (x = 0; x < this.size; x++) {
+        this._lastCoordinates[x] = [];
+        for (y = 0; y < this.size; y++) {
+          this._lastCoordinates[x][y] = this._coordinates[x][y];
+        }
+      }
+
+      return;
+    }
+
+    // the second step
+    if (this._secondLastCoordinates == null) {
+      this._secondLastCoordinates = [];
+      for (x = 0; x < this.size; x++) {
+        this._secondLastCoordinates[x] = [];
+        for (y = 0; y < this.size; y++) {
+          this._secondLastCoordinates[x][y] = this._lastCoordinates[x][y];
+          this._lastCoordinates[x][y] = this._coordinates[x][y];
+        }
+      }
+
+      return;
+    }
+
+    // the second step or later
+    for (x = 0; x < this.size; x++) {
+      for (y = 0; y < this.size; y++) {
+        this._secondLastCoordinates[x][y] = this._lastCoordinates[x][y];
+        this._lastCoordinates[x][y] = this._coordinates[x][y];
+      }
+    }
   };
 
   Board.prototype.canPutStone = function(x, y, stone) {
@@ -78,8 +121,6 @@ define(function(require) {
       return false;
     }
 
-    // TODO: ban recapuring ko immediately
-
     if (this.dryPutStone(x, y, stone) === -1) {
       return true;
     }
@@ -88,16 +129,10 @@ define(function(require) {
   };
 
   Board.prototype.dryPutStone = function(x, y, stone) {
-    // TODO: make copy method
     var coords;
-    var dryBoard = new Board(this.size);
-    var xi, yi;
-    for (xi = 0; xi < dryBoard.size; xi++) {
-      for (yi = 0; yi < dryBoard.size; yi++) {
-        dryBoard._coordinates[xi][yi] = this._coordinates[xi][yi];
-      }
-    }
+    var dryBoard = this._copy();
 
+    dryBoard._rotateLastCoordinates();
     dryBoard._coordinates[x][y] = stone;
 
     coords = dryBoard._capture(x, y, stone);
@@ -107,7 +142,65 @@ define(function(require) {
       }
     }
 
+    if (dryBoard._isRecapturingKoimmediately()) {
+      return -1;
+    }
+
     return coords.length;
+  };
+
+  Board.prototype._copy = function() {
+    var dryBoard = new Board(this.size);
+    var xi, yi;
+    var existsLast = (this._lastCoordinates != null);
+    var existsSecondLast = (this._secondLastCoordinates != null);
+
+    if (existsLast) {
+      dryBoard._lastCoordinates = [];
+      for (xi = 0; xi < dryBoard.size; xi++) {
+        dryBoard._lastCoordinates[xi] = [];
+      }
+    }
+
+    if (existsSecondLast) {
+      dryBoard._secondLastCoordinates = [];
+      for (xi = 0; xi < dryBoard.size; xi++) {
+        dryBoard._secondLastCoordinates[xi] = [];
+      }
+    }
+
+    for (xi = 0; xi < dryBoard.size; xi++) {
+      for (yi = 0; yi < dryBoard.size; yi++) {
+        if (existsSecondLast) {
+          dryBoard._secondLastCoordinates[xi][yi] = this._secondLastCoordinates[xi][yi];
+        }
+        if (existsLast) {
+          dryBoard._lastCoordinates[xi][yi] = this._lastCoordinates[xi][yi];
+        }
+
+        dryBoard._coordinates[xi][yi] = this._coordinates[xi][yi];
+      }
+    }
+
+    return dryBoard;
+  };
+
+  Board.prototype._isRecapturingKoimmediately = function() {
+    var x, y;
+
+    if (this._secondLastCoordinates == null) {
+      return false;
+    }
+
+    for (x = 0; x < this.size; x++) {
+      for (y = 0; y < this.size; y++) {
+        if (this._coordinates[x][y] !== this._secondLastCoordinates[x][y]) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   };
 
   Board.prototype._capture = function(x, y, myStone) {
