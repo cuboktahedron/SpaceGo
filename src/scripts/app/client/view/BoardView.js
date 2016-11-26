@@ -85,10 +85,8 @@ define(function(require) {
           dy = 0;
         }
 
-        console.log('before:', this._center);
         this._center.x = (this._size + grabCenter.x - dx) % this._size;
         this._center.y = (this._size + grabCenter.y - dy) % this._size;
-        console.log('after:', this._center);
 
         this._refreshAll(this._cachedGameState);
       };
